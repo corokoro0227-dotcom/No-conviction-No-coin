@@ -1,0 +1,182 @@
+[
+  {
+    "id": "btc-b-1",
+    "coin": "BTC",
+    "bias": "bullish",
+    "headline": "Spot bitcoin ETFs absorb another $1.2B as desks extend the bid",
+    "source": "Ledger Line",
+    "publishedAt": "2026-09-05T14:10:00.000Z",
+    "match": 94,
+    "url": "https://example.com/btc-etf-inflows"
+  },
+  {
+    "id": "btc-b-2",
+    "coin": "BTC",
+    "bias": "bullish",
+    "headline": "Miners add hash after difficulty eases — the supply-tight story returns",
+    "source": "Hash Notes",
+    "publishedAt": "2026-09-05T09:40:00.000Z",
+    "match": 88,
+    "url": "https://example.com/btc-hash-add"
+  },
+  {
+    "id": "btc-b-3",
+    "coin": "BTC",
+    "bias": "bullish",
+    "headline": "Treasury teams treat bitcoin as reserve ballast, not a weekend trade",
+    "source": "Reserve Desk",
+    "publishedAt": "2026-09-04T18:20:00.000Z",
+    "match": 81,
+    "url": "https://example.com/btc-treasury"
+  },
+  {
+    "id": "btc-be-1",
+    "coin": "BTC",
+    "bias": "bearish",
+    "headline": "Leverage flushed as bitcoin loses a well-watched weekly level",
+    "source": "Tape Cut",
+    "publishedAt": "2026-09-05T13:05:00.000Z",
+    "match": 93,
+    "url": "https://example.com/btc-leverage-flush"
+  },
+  {
+    "id": "btc-be-2",
+    "coin": "BTC",
+    "bias": "bearish",
+    "headline": "ETF outflows stretch into a fourth session; liquidity thins above",
+    "source": "Ledger Line",
+    "publishedAt": "2026-09-05T08:15:00.000Z",
+    "match": 86,
+    "url": "https://example.com/btc-etf-outflows"
+  },
+  {
+    "id": "btc-be-3",
+    "coin": "BTC",
+    "bias": "bearish",
+    "headline": "Spent-output profit ratio cools — distribution, not accumulation",
+    "source": "On-chain Brief",
+    "publishedAt": "2026-09-04T16:45:00.000Z",
+    "match": 79,
+    "url": "https://example.com/btc-sopr"
+  },
+  {
+    "id": "eth-b-1",
+    "coin": "ETH",
+    "bias": "bullish",
+    "headline": "Staking queue lengthens as more ether leaves liquid float",
+    "source": "Beacon Desk",
+    "publishedAt": "2026-09-05T12:30:00.000Z",
+    "match": 91,
+    "url": "https://example.com/eth-staking-queue"
+  },
+  {
+    "id": "eth-b-2",
+    "coin": "ETH",
+    "bias": "bullish",
+    "headline": "Layer-2 fees stay muted while settlement demand keeps climbing",
+    "source": "Rollup Wire",
+    "publishedAt": "2026-09-05T07:50:00.000Z",
+    "match": 84,
+    "url": "https://example.com/eth-l2-demand"
+  },
+  {
+    "id": "eth-b-3",
+    "coin": "ETH",
+    "bias": "bullish",
+    "headline": "Corporate treasuries open small ether sleeves after the last upgrade",
+    "source": "Reserve Desk",
+    "publishedAt": "2026-09-03T21:10:00.000Z",
+    "match": 76,
+    "url": "https://example.com/eth-treasury-sleeves"
+  },
+  {
+    "id": "eth-be-1",
+    "coin": "ETH",
+    "bias": "bearish",
+    "headline": "Validator exits pick up; the free-float argument loses a prop",
+    "source": "Beacon Desk",
+    "publishedAt": "2026-09-05T11:25:00.000Z",
+    "match": 90,
+    "url": "https://example.com/eth-validator-exits"
+  },
+  {
+    "id": "eth-be-2",
+    "coin": "ETH",
+    "bias": "bearish",
+    "headline": "L2 tokens keep bleeding attention away from ether itself",
+    "source": "Rollup Wire",
+    "publishedAt": "2026-09-04T20:05:00.000Z",
+    "match": 77,
+    "url": "https://example.com/eth-attention-split"
+  },
+  {
+    "id": "eth-be-3",
+    "coin": "ETH",
+    "bias": "bearish",
+    "headline": "Gas stays cheap — and so does the urgency to hold the asset",
+    "source": "Fee Print",
+    "publishedAt": "2026-09-03T15:40:00.000Z",
+    "match": 72,
+    "url": "https://example.com/eth-cheap-gas"
+  },
+  {
+    "id": "sol-b-1",
+    "coin": "SOL",
+    "bias": "bullish",
+    "headline": "Solana throughput holds through another activity spike",
+    "source": "Slot Time",
+    "publishedAt": "2026-09-05T10:55:00.000Z",
+    "match": 89,
+    "url": "https://example.com/sol-throughput"
+  },
+  {
+    "id": "sol-b-2",
+    "coin": "SOL",
+    "bias": "bullish",
+    "headline": "New RWA desks choose Solana rails for same-day settlement tests",
+    "source": "Rails Brief",
+    "publishedAt": "2026-09-04T13:30:00.000Z",
+    "match": 83,
+    "url": "https://example.com/sol-rwa-rails"
+  },
+  {
+    "id": "sol-b-3",
+    "coin": "SOL",
+    "bias": "bullish",
+    "headline": "Fees stay low while app revenue prints another quiet high",
+    "source": "Slot Time",
+    "publishedAt": "2026-09-02T19:00:00.000Z",
+    "match": 75,
+    "url": "https://example.com/sol-app-revenue"
+  },
+  {
+    "id": "sol-be-1",
+    "coin": "SOL",
+    "bias": "bearish",
+    "headline": "Outage scare premium returns after a skipped slot cluster",
+    "source": "Slot Time",
+    "publishedAt": "2026-09-05T06:40:00.000Z",
+    "match": 87,
+    "url": "https://example.com/sol-skipped-slots"
+  },
+  {
+    "id": "sol-be-2",
+    "coin": "SOL",
+    "bias": "bearish",
+    "headline": "Meme-flow dries up; fee burn no longer covers the narrative",
+    "source": "Tape Cut",
+    "publishedAt": "2026-09-04T11:15:00.000Z",
+    "match": 80,
+    "url": "https://example.com/sol-meme-flow"
+  },
+  {
+    "id": "sol-be-3",
+    "coin": "SOL",
+    "bias": "bearish",
+    "headline": "Validators debate another client delay — concentration risk stays loud",
+    "source": "Rails Brief",
+    "publishedAt": "2026-09-03T08:25:00.000Z",
+    "match": 74,
+    "url": "https://example.com/sol-client-delay"
+  }
+]

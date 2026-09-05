@@ -29,6 +29,7 @@ type AppContextValue = AppState & {
 
 const AppContext = createContext<AppContextValue | null>(null);
 
+const SERVER_STATE = emptyState();
 let memory = emptyState();
 let hydrated = false;
 const listeners = new Set<() => void>();
@@ -50,6 +51,10 @@ function readClient(): AppState {
   return memory;
 }
 
+function getServerSnapshot(): AppState {
+  return SERVER_STATE;
+}
+
 function write(next: AppState) {
   memory = next;
   saveState(next);
@@ -61,7 +66,7 @@ function update(recipe: (current: AppState) => AppState) {
 }
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const state = useSyncExternalStore(subscribe, readClient, emptyState);
+  const state = useSyncExternalStore(subscribe, readClient, getServerSnapshot);
   const ready = useSyncExternalStore(
     subscribe,
     () => true,

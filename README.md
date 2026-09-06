@@ -54,3 +54,42 @@ NEWS_CACHE_TTL_MS=600000
 ```bash
 npm run build
 ```
+
+## Operator digest (first-party analytics)
+
+No third-party analytics SDKs. The server keeps an append-only JSONL log so the operator can read daily visitors and account registrations in **Asia/Tokyo**.
+
+**Log file:** `data/events.jsonl` under `process.cwd()`. Override with `NCNC_EVENTS_PATH`. If that path is not writable, the server falls back to `/tmp/ncnc-events.jsonl`. Do not commit the log.
+
+Each line:
+
+```json
+{"ts":"2026-09-05T20:00:00.000Z","event":"signup","meta":{"sessionId":"…"}}
+```
+
+`event` is `signup`, `lock`, or `pageview`. `meta` may include an anonymous `sessionId` only. Emails, IPs, and other PII are not written.
+
+The client stores a stable anonymous id in `localStorage` (`ncnc.sid`) and sends it with events so `/api/stats` can dedupe visitors. Mock signup success posts `signup`. A successful LOCK posts `lock`. Splash or feed posts `pageview` once per browser tab session.
+
+### `POST /api/event`
+
+Body: `{ "event": "signup" | "lock" | "pageview", "meta": { "sessionId": "…" } }`
+
+Validates the event enum, appends one line, returns **204**. Light in-memory rate limit: 30 requests / minute / IP. Invalid bodies return 400.
+
+### `GET /api/stats?day=YYYY-MM-DD`
+
+`day` is an **Asia/Tokyo** calendar day. Omit it to get **yesterday** in Tokyo.
+
+```json
+{
+  "day": "2026-09-05",
+  "timezone": "Asia/Tokyo",
+  "visitors": 12,
+  "signups": 3,
+  "locks": 2,
+  "pageviews": 18
+}
+```
+
+`visitors` are unique anonymous session ids that sent a `pageview` that day, plus distinct `signup` / `lock` actors (same session id, or the event itself if no id). Unique IPs from nginx are out of scope.

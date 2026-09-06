@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# first-party event log (operator digest)
+/data/events.jsonl
+/tmp/ncnc-events.jsonl

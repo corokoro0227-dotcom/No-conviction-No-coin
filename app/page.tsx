@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { BrandMark } from "@/components/BrandMark";
 import { Guard } from "@/components/Guard";
+import { Pageview } from "@/components/Pageview";
 import { Body, Button, Screen } from "@/components/ui";
 import { DISCLAIMER, SPLASH_BODY } from "@/lib/copy";
 
@@ -11,6 +12,7 @@ export default function SplashPage() {
 
   return (
     <Guard gate="public">
+      <Pageview />
       <Screen>
         <header className="flex items-center justify-between">
           <BrandMark />

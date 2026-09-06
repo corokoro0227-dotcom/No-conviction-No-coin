@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
 import { Guard } from "@/components/Guard";
+import { Pageview } from "@/components/Pageview";
 import { ARTICLES, convictionQuery, filterArticles } from "@/lib/articles";
 import { coinById } from "@/lib/coins";
 import { formatRelativeTime } from "@/lib/format";
@@ -75,6 +76,7 @@ export default function FeedPage() {
 
   return (
     <Guard gate="locked">
+      <Pageview />
       <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-5 pb-12 pt-6 sm:px-8 sm:pt-8">
         <header className="flex items-start justify-between gap-4">
           <div>

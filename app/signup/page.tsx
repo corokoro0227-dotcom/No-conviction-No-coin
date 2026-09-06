@@ -28,7 +28,7 @@ export default function SignupPage() {
           <Title>Sign up. Then lock a view.</Title>
           <Body>
             Mock auth only — Email, Apple, or Google starts a session on this
-            device. Nothing leaves the browser.
+            device. Credentials stay local.
           </Body>
 
           <div className="mt-8 flex flex-col gap-2.5">

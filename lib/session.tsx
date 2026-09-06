@@ -9,6 +9,7 @@ import {
 } from "react";
 import { MAX_COINS } from "./coins";
 import { clearState, loadState, saveState } from "./storage";
+import { track } from "./telemetry";
 import {
   emptyState,
   type AppState,
@@ -82,6 +83,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         signedInAt: new Date().toISOString(),
       },
     }));
+    track("signup");
   }, []);
 
   const setDraftCoins = useCallback((coins: CoinId[]) => {
@@ -133,6 +135,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         },
       };
     });
+    track("lock");
     return true;
   }, []);
 

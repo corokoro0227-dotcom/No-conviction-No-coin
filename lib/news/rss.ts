@@ -38,6 +38,19 @@ function hrefFromLink(xml: string): string {
   return innerTag(xml, "link");
 }
 
+export function isArticleUrl(raw: string): boolean {
+  try {
+    const url = new URL(raw);
+    const path = url.pathname.toLowerCase();
+    if (path.includes("/video") || path.includes("/podcast") || path.includes("/watch")) {
+      return false;
+    }
+    return /^https?:$/i.test(url.protocol);
+  } catch {
+    return false;
+  }
+}
+
 export function cleanUrl(raw: string): string {
   try {
     const url = new URL(raw);
@@ -72,7 +85,7 @@ export function parseRssItems(xml: string): RssItem[] {
     const body = block[1] ?? "";
     const title = innerTag(body, "title");
     const url = cleanUrl(hrefFromLink(body) || innerTag(body, "guid"));
-    if (!title || !url || !/^https?:\/\//i.test(url)) continue;
+    if (!title || !url || !isArticleUrl(url)) continue;
 
     const dateRaw =
       innerTag(body, "pubDate") ||

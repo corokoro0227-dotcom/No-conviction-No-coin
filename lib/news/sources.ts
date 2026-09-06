@@ -1,6 +1,6 @@
 import type { CoinId } from "../types";
 import { classifyStory } from "./classify";
-import { parseRssItems, type RssItem } from "./rss";
+import { isArticleUrl, parseRssItems, type RssItem } from "./rss";
 
 export type IngestedArticle = {
   id: string;
@@ -184,7 +184,7 @@ async function ingestCryptoPanic(): Promise<IngestedArticle[]> {
         .map((post) => {
           const url = post.original_url || post.url || "";
           const title = post.title?.trim() ?? "";
-          if (!title || !url) return null;
+          if (!title || !url || !isArticleUrl(url)) return null;
           const votes = panicVotes(post);
           const classified = classifyStory(
             votes.title,

@@ -31,7 +31,8 @@ export type DayStats = {
   pageviews: number;
 };
 
-const DEFAULT_RELATIVE = path.join("data", "events.jsonl");
+const DATA_DIR = path.join(process.cwd(), "data");
+const DEFAULT_FILE = path.join(DATA_DIR, "events.jsonl");
 const FALLBACK_PATH = path.join("/tmp", "ncnc-events.jsonl");
 
 export function isTelemetryEvent(value: unknown): value is TelemetryEvent {
@@ -44,7 +45,7 @@ export function isTelemetryEvent(value: unknown): value is TelemetryEvent {
 export function configuredEventsPath(): string {
   const override = process.env.NCNC_EVENTS_PATH?.trim();
   if (override) return override;
-  return path.join(process.cwd(), DEFAULT_RELATIVE);
+  return DEFAULT_FILE;
 }
 
 export function tokyoCalendarDay(date: Date = new Date()): string {
@@ -148,17 +149,33 @@ export function parseEventLog(raw: string): EventLine[] {
 
 let resolvedPath: string | null = null;
 
+async function appendChunk(file: string, chunk: string) {
+  if (file === DEFAULT_FILE) {
+    await mkdir(DATA_DIR, { recursive: true });
+    await appendFile(DEFAULT_FILE, chunk, "utf8");
+    return;
+  }
+  await mkdir(path.dirname(file), { recursive: true });
+  await appendFile(/*turbopackIgnore: true*/ file, chunk, "utf8");
+}
+
+async function readChunk(file: string): Promise<string> {
+  if (file === DEFAULT_FILE) {
+    return readFile(DEFAULT_FILE, "utf8");
+  }
+  return readFile(/*turbopackIgnore: true*/ file, "utf8");
+}
+
 async function resolveWritablePath(): Promise<string> {
   if (resolvedPath) return resolvedPath;
 
   const primary = configuredEventsPath();
   try {
-    await mkdir(path.dirname(primary), { recursive: true });
-    await appendFile(primary, "");
+    await appendChunk(primary, "");
     resolvedPath = primary;
     return primary;
   } catch {
-    await mkdir(path.dirname(FALLBACK_PATH), { recursive: true });
+    await appendChunk(FALLBACK_PATH, "");
     resolvedPath = FALLBACK_PATH;
     return FALLBACK_PATH;
   }
@@ -174,14 +191,14 @@ export async function appendEvent(event: TelemetryEvent, meta?: EventMeta) {
     event,
     ...(meta ? { meta } : {}),
   };
+  const chunk = `${JSON.stringify(line)}\n`;
   const file = await resolveWritablePath();
   try {
-    await appendFile(file, `${JSON.stringify(line)}\n`, "utf8");
+    await appendChunk(file, chunk);
   } catch {
     if (file !== FALLBACK_PATH) {
       resolvedPath = FALLBACK_PATH;
-      await mkdir(path.dirname(FALLBACK_PATH), { recursive: true });
-      await appendFile(FALLBACK_PATH, `${JSON.stringify(line)}\n`, "utf8");
+      await appendChunk(FALLBACK_PATH, chunk);
     } else {
       throw new Error("event log is not writable");
     }
@@ -191,8 +208,7 @@ export async function appendEvent(event: TelemetryEvent, meta?: EventMeta) {
 export async function readEvents(): Promise<EventLine[]> {
   const file = await resolveWritablePath();
   try {
-    const raw = await readFile(file, "utf8");
-    return parseEventLog(raw);
+    return parseEventLog(await readChunk(file));
   } catch {
     return [];
   }

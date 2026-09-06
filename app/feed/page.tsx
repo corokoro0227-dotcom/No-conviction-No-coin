@@ -1,17 +1,77 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
 import { Guard } from "@/components/Guard";
-import { filterArticles } from "@/lib/articles";
+import { ARTICLES, convictionQuery, filterArticles } from "@/lib/articles";
 import { coinById } from "@/lib/coins";
 import { formatRelativeTime } from "@/lib/format";
 import { useApp } from "@/lib/session";
+import type { Article } from "@/lib/types";
+
+type FeedMode = "live" | "cache" | "sample";
+
+type FeedState = {
+  articles: Article[];
+  mode: FeedMode;
+  sources: string;
+  ready: boolean;
+};
+
+const INITIAL: FeedState = {
+  articles: [],
+  mode: "live",
+  sources: "",
+  ready: false,
+};
 
 export default function FeedPage() {
   const { profile } = useApp();
   const convictions = profile?.convictions ?? [];
-  const articles = filterArticles(convictions);
+  const query = convictionQuery(convictions);
+  const [feed, setFeed] = useState<FeedState>(INITIAL);
+
+  useEffect(() => {
+    if (!query) return;
+
+    const controller = new AbortController();
+
+    async function load() {
+      try {
+        const response = await fetch(`/api/feed?q=${encodeURIComponent(query)}`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error("feed");
+        const payload = (await response.json()) as {
+          articles?: Article[];
+          mode?: FeedMode;
+          sources?: string;
+        };
+        if (controller.signal.aborted) return;
+        setFeed({
+          articles: Array.isArray(payload.articles) ? payload.articles : [],
+          mode: payload.mode === "cache" || payload.mode === "sample" ? payload.mode : "live",
+          sources: typeof payload.sources === "string" ? payload.sources : "",
+          ready: true,
+        });
+      } catch {
+        if (controller.signal.aborted) return;
+        setFeed({
+          articles: filterArticles(convictions, ARTICLES),
+          mode: "sample",
+          sources: "Sealed sample tape",
+          ready: true,
+        });
+      }
+    }
+
+    setFeed((current) => ({ ...current, ready: false }));
+    void load();
+    return () => controller.abort();
+  }, [query, convictions]);
+
+  const articles = feed.articles;
 
   return (
     <Guard gate="locked">
@@ -41,13 +101,17 @@ export default function FeedPage() {
         </header>
 
         <main className="mt-8 flex-1">
-          {articles.length === 0 ? (
+          {!feed.ready ? (
+            <div className="flex min-h-[50vh] items-center justify-center border-y border-line">
+              <div className="h-1.5 w-1.5 rounded-full bg-signal" />
+            </div>
+          ) : articles.length === 0 ? (
             <div className="flex min-h-[50vh] flex-col justify-center border-y border-line py-16">
               <p className="text-[1.6rem] font-semibold tracking-[-0.03em] text-paper">
                 Silence is the feature.
               </p>
               <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-mist">
-                A conviction doesn’t need a headline every hour.
+                Nothing on the wire matches this lock. Unclear stories stay out.
               </p>
             </div>
           ) : (
@@ -81,6 +145,16 @@ export default function FeedPage() {
             </ul>
           )}
         </main>
+
+        {feed.ready ? (
+          <footer className="mt-8 text-[11px] leading-relaxed text-mist">
+            {feed.mode === "sample"
+              ? "Live sources unreachable. Showing sealed sample tape. Not financial advice."
+              : feed.mode === "cache"
+                ? `Cached wire · ${feed.sources}. Unclear stories stay silent. Not financial advice.`
+                : `Live wire · ${feed.sources}. Filtered to this lock only. Not financial advice.`}
+          </footer>
+        ) : null}
       </div>
     </Guard>
   );
